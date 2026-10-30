@@ -2,15 +2,110 @@
 @tailwind components;
 @tailwind utilities;
 
-
-html {
-    --line-color: #e5e7eb
+/* ---------------------------------------------------------------
+   Theme tokens as RGB channels so Tailwind can apply opacity.
+   Dark is the default; .light on <html> switches to the paper theme.
+---------------------------------------------------------------- */
+:root,
+html.dark {
+  --bg: 10 10 10;
+  --surface: 18 18 18;
+  --elev: 27 27 27;
+  --fg: 245 245 243;
+  --muted: 152 152 150;
+  --line: 38 38 38;
+  --accent: 225 6 0; /* racing red */
+  --accent-ink: 255 92 82; /* brighter red for text on black */
+  --on-accent: 255 255 255;
+  color-scheme: dark;
 }
 
-html.dark {
-    --line-color: rgba(255, 255, 255, 0.2);
+html.light {
+  --bg: 246 246 244;
+  --surface: 236 236 233;
+  --elev: 252 252 251;
+  --fg: 17 17 17;
+  --muted: 98 98 96;
+  --line: 221 221 217;
+  --accent: 225 6 0;
+  --accent-ink: 196 10 4;
+  --on-accent: 255 255 255;
+  color-scheme: light;
+}
+
+@layer base {
+  html {
+    @apply scroll-smooth;
+    -webkit-text-size-adjust: 100%;
   }
 
-.borderBlack {
-    @apply border border-black/10
+  body {
+    @apply bg-bg text-fg font-sans antialiased;
+    font-feature-settings: "ss01", "cv11";
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    @apply bg-accent text-on-accent;
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-accent ring-offset-2 ring-offset-bg rounded-md;
+  }
+
+  section[id] {
+    scroll-margin-top: 5.5rem;
+  }
+}
+
+@layer components {
+  .shell {
+    @apply mx-auto w-full max-w-shell px-4 sm:px-6 lg:px-8;
+  }
+
+  .eyebrow {
+    @apply font-mono text-[0.72rem] uppercase tracking-[0.18em] text-muted;
+  }
+
+  .chip {
+    @apply inline-flex items-center rounded-full border border-line bg-surface/60 px-2.5 py-1 font-mono text-[0.7rem] tracking-wide text-muted;
+  }
+
+  .card {
+    @apply rounded-2xl border border-line bg-surface/70;
+  }
+
+  .link-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 0.3s ease;
+  }
+  .link-underline:hover {
+    background-size: 100% 1px;
+  }
+}
+
+/* Film-grain overlay: subtle texture so flat colour doesn't feel sterile */
+.grain::before {
+  content: "";
+  position: fixed;
+  inset: -50%;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+html.light .grain::before {
+  opacity: 0.05;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate-marquee {
+    animation: none;
+  }
 }

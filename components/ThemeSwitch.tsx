@@ -1,18 +1,32 @@
 "use client";
 
+import { AnimatePresence, motion } from "motion/react";
+import { FiMoon, FiSun } from "react-icons/fi";
 import { useTheme } from "@/context/ThemeContext";
-import React from "react";
-import { BsMoon, BsSun } from "react-icons/bs";
 
 export default function ThemeSwitch() {
   const { theme, toggleTheme } = useTheme();
+  const label = theme === "dark" ? "Switch to light theme" : "Switch to dark theme";
 
   return (
     <button
-      className="fixed bottom-5 right-5 bg-white w-[3rem] h-[3rem] bg-opacity-80 backdrop-blur-[0.5rem] border border-white border-opacity-40 shadow-2xl rounded-full flex items-center justify-center hover:scale-[1.15] active:scale-105 transition-all dark:bg-gray-950"
+      type="button"
       onClick={toggleTheme}
+      aria-label={label}
+      title={label}
+      className="relative grid h-9 w-9 place-items-center overflow-hidden rounded-full border border-line bg-surface/70 text-muted transition hover:text-fg"
     >
-      {theme === "light" ? <BsSun /> : <BsMoon />}
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.span
+          key={theme}
+          initial={{ y: 14, opacity: 0, rotate: -30 }}
+          animate={{ y: 0, opacity: 1, rotate: 0 }}
+          exit={{ y: -14, opacity: 0, rotate: 30 }}
+          transition={{ duration: 0.2 }}
+        >
+          {theme === "dark" ? <FiMoon size={15} /> : <FiSun size={15} />}
+        </motion.span>
+      </AnimatePresence>
     </button>
   );
 }

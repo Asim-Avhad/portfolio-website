@@ -1,36 +1,44 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Asim Avhad · Portfolio (v2)
 
-## Getting Started
+Personal site for Asim Avhad: AI engineer and Master of AI student at Monash University, Melbourne.
 
-First, run the development server:
+**Stack:** Next.js 15 (App Router, Server Actions) · React 19 · TypeScript · Tailwind CSS 3 · Motion · Resend + React Email
+
+## Run it
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev        # http://localhost:3000
+npm run build && npm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Editing content
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Everything you'd want to change lives in **`lib/data.ts`**: the status pill, projects, experience, skills, awards and the "off the clock" facts. Components only read from it.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- **Add a GitHub / demo link to an AI project:** set `repo` or `demo` on it in `featuredProjects` and a button appears.
+- **Change availability:** edit `site.status` (set `open: false` to hide the pill).
+- **Résumé:** replace `public/Asim-Avhad-Resume.pdf`.
 
-## Learn More
+## Contact form
 
-To learn more about Next.js, take a look at the following resources:
+The form posts to a server action (`actions/SendEmail.ts`) that sends through [Resend](https://resend.com). Add your key to `.env.local` locally and to your host's environment variables:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+RESEND_API_KEY=re_...
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Without a key the form shows a friendly "email me directly" message instead of failing.
 
-## Deploy on Vercel
+## Design notes
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Theme:** dark by default with a clean light mode, follows the visitor's system setting, no flash on load. Accent is racing red (#E10600), with a brighter red for text on black.
+- **Type:** Instrument Serif (display), Geist Sans (body), Geist Mono (labels).
+- **Hero background:** `public/contours.svg` is a topographic map generated from a height field; the animated line is a real gradient-descent path on that same field. Trekking meets loss landscapes.
+- **F1 touches:** the F1 project card has a car lapping an original circuit with a lap counter and pit-stop countdown; another car crosses a chequered strip in the footer (`components/F1Car.tsx`, `F1Circuit.tsx`, `FinishLine.tsx`).
+- **Quick nav:** press <kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>K</kbd> anywhere.
+- Respects `prefers-reduced-motion`.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Deploying
+
+Works out of the box on Vercel. Set `NEXT_PUBLIC_SITE_URL` to your production URL if you use a custom domain (used for social-preview links).

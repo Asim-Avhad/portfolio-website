@@ -1,42 +1,74 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
+import "@fontsource/instrument-serif/400.css";
+import "@fontsource/instrument-serif/400-italic.css";
 import "./globals.css";
+import Providers from "@/components/Providers";
 import Header from "@/components/Header";
-import ActiveSectionContextProvider from "@/context/ActiveSectionContext";
-import { Toaster } from "react-hot-toast";
 import Footer from "@/components/Footer";
-import ThemeSwitch from "@/components/ThemeSwitch";
-import ThemeContextProvider from "@/context/ThemeContext";
+import CommandMenu from "@/components/CommandMenu";
+import { themeScript } from "@/context/ThemeContext";
+import { site } from "@/lib/data";
 
-const inter = Inter({ subsets: ["latin"] });
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "http://localhost:3000");
+
+const description =
+  "Asim Avhad, AI engineer and Master of AI student at Monash University, Melbourne. NLP, retrieval-augmented generation, deep learning and multi-agent planning, built on a full-stack and design foundation.";
 
 export const metadata: Metadata = {
-  title: "Asim | Personal Portfolio",
-  description:
-    "Asim is a Computer Science & Design final year engineering student.",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: `${site.name} · ${site.role}`,
+    template: `%s · ${site.name}`,
+  },
+  description,
+  keywords: ["Asim Avhad", "AI engineer", "machine learning", "NLP", "RAG", "Monash University", "Melbourne", "portfolio"],
+  authors: [{ name: site.name, url: site.linkedin }],
+  openGraph: {
+    type: "website",
+    title: `${site.name} · ${site.role}`,
+    description,
+    siteName: site.name,
+    locale: "en_AU",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${site.name} · ${site.role}`,
+    description,
+  },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+    { media: "(prefers-color-scheme: light)", color: "#f6f6f4" },
+  ],
+};
+
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className="!scroll-smooth">
-      <body
-        className={`${inter.className} bg-gray-50 text-gray-950 relative pt-28 sm:pt-36 dark:bg-gray-900 dark:text-gray-50 dark:text-opacity-90`}
-      >
-        <div className="bg-[#fbe2e3] absolute top-[-6rem] -z-10 right-[11rem] h-[31.25rem] w-[31.25rem] rounded-full blur-[10rem] sm:w-[68.75rem] dark:bg-[#946263]"></div>
-        <div className="bg-[#dbd7fb] absolute top-[-1rem] -z-10 left-[-35rem] h-[31.25rem] w-[50rem] rounded-full blur-[10rem] sm:w-[68.75rem] md:left-[-33rem] lg:left-[-28rem] xl:left-[-15rem] 2xl:left-[-5rem] dark:bg-[#676394]"></div>
-        <ThemeContextProvider>
-          <ActiveSectionContextProvider>
-            <Header />
-            {children}
-            <Footer />
-            <Toaster position="top-right" />
-            <ThemeSwitch />
-          </ActiveSectionContextProvider>
-        </ThemeContextProvider>
+    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
+      <body className="grain min-h-dvh overflow-x-hidden">
+        <Providers>
+          <a
+            href="#main"
+            className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-accent focus:px-3 focus:py-2 focus:text-on-accent"
+          >
+            Skip to content
+          </a>
+          <Header />
+          {children}
+          <Footer />
+          <CommandMenu />
+        </Providers>
       </body>
     </html>
   );
