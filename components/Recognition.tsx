@@ -8,13 +8,8 @@ export default function Recognition() {
       <div className="shell">
         <SectionHeader
           id="rec-title"
-          index="06"
-          label="Recognition"
-          title={
-            <>
-              Podiums &amp; <em className="text-accent-ink">paperwork</em>.
-            </>
-          }
+          title="Awards and certifications"
+          intro="Podiums and paperwork, from project competitions to cohort rankings at Monash."
         />
 
         <div className="grid gap-12 lg:grid-cols-12">
@@ -22,12 +17,12 @@ export default function Recognition() {
             <ul className="grid gap-px overflow-hidden rounded-[1.5rem] border border-line bg-line sm:grid-cols-2">
               {awards.map((a) => (
                 <li key={a.title} className="flex items-center gap-5 bg-surface p-5 sm:p-6">
-                  <span className="w-[5.25rem] shrink-0 whitespace-nowrap font-display text-[2rem] leading-none text-accent-ink">{a.place}</span>
+                  <span className="figures w-[5.25rem] shrink-0 whitespace-nowrap font-display text-[2rem] leading-none text-accent-ink">{a.place}</span>
                   <div className="min-w-0">
                     <p className="font-medium leading-tight">{a.title}</p>
                     <p className="mt-1 text-[0.82rem] text-muted">
                       {a.detail}
-                      {a.date && <> · {a.date}</>}
+                      {a.date && <>, {a.date}</>}
                     </p>
                   </div>
                 </li>
@@ -36,12 +31,12 @@ export default function Recognition() {
           </Reveal>
 
           <Reveal delay={0.1} className="lg:col-span-4">
-            <p className="eyebrow mb-4">Certifications</p>
+            <h3 className="mb-4 font-display text-[1.7rem] leading-none">Certifications</h3>
             <ul className="divide-y divide-line border-y border-line">
               {certifications.map((c) => (
                 <li key={c.title} className="py-4">
                   <p className="leading-tight">{c.title}</p>
-                  <p className="mt-1 font-mono text-[0.72rem] uppercase tracking-wider text-muted">{c.issuer}</p>
+                  <p className="mt-1 text-[0.85rem] text-muted">{c.issuer}</p>
                 </li>
               ))}
             </ul>

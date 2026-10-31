@@ -1,20 +1,36 @@
 "use client";
 
-import { motion, type HTMLMotionProps } from "motion/react";
+import { useEffect, useRef } from "react";
+import { cn } from "@/lib/utils";
 
-type Props = HTMLMotionProps<"div"> & { delay?: number; y?: number };
+type Props = React.HTMLAttributes<HTMLDivElement> & { delay?: number };
 
-/** Fades + lifts its children into view once. */
-export default function Reveal({ delay = 0, y = 24, children, ...rest }: Props) {
+/**
+ * Lifts its children into view once. Visible by default: the hiding rule only
+ * applies under html.js (globals.css), so the page never ships blank if a script fails.
+ */
+export default function Reveal({ delay = 0, className, style, children, ...rest }: Props) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          el.classList.add("is-in");
+          io.disconnect();
+        }
+      },
+      { rootMargin: "0px 0px -10% 0px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "0px 0px -10% 0px" }}
-      transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
-      {...rest}
-    >
+    <div ref={ref} className={cn("reveal", className)} style={{ ...style, ["--d" as string]: `${delay}s` }} {...rest}>
       {children}
-    </motion.div>
+    </div>
   );
 }

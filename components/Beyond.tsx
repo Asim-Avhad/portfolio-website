@@ -16,14 +16,12 @@ export default function Beyond() {
               sizes="(min-width: 1216px) 1216px, 100vw"
               className="h-[22rem] w-full object-cover object-[42%_70%] sm:h-[38rem]"
             />
-            <div className="absolute inset-0 hidden bg-gradient-to-tl from-black/80 via-black/20 to-transparent sm:block" aria-hidden />
-            <figcaption className="bg-surface p-6 sm:absolute sm:bottom-0 sm:right-0 sm:max-w-[34rem] sm:bg-transparent sm:p-10 sm:text-right sm:text-white">
-              <p className="font-mono text-[0.72rem] uppercase tracking-[0.18em] text-muted sm:text-white/70">
-                <span className="text-accent-ink sm:text-[#FF5C52]">07</span> / Off the clock
-              </p>
-              <h2 id="beyond-title" className="mt-4 font-display text-[2.4rem] leading-[1] sm:ml-auto sm:max-w-[14ch] sm:text-6xl">
-                My best thinking happens <em className="text-accent-ink sm:text-[#FF5C52]">above the treeline</em>.
+            {/* The scrim lives on the caption itself, so the shade always sits under its words. */}
+            <figcaption className="bg-surface p-6 sm:absolute sm:inset-0 sm:flex sm:flex-col sm:items-end sm:justify-end sm:bg-transparent sm:bg-gradient-to-tl sm:from-photo-shade/90 sm:via-photo-shade/45 sm:to-transparent sm:p-10 sm:text-right sm:text-photo-fg">
+              <h2 id="beyond-title" className="font-display text-[2.6rem] leading-[1.02] sm:text-6xl">
+                Off the clock
               </h2>
+              <p className="mt-3 text-[1.05rem] text-muted sm:text-photo-fg">My best thinking happens above the treeline.</p>
             </figcaption>
           </figure>
         </Reveal>

@@ -4,9 +4,9 @@ import Reveal from "./Reveal";
 import { cn } from "@/lib/utils";
 
 const kindStyle = {
-  Study: "border-fg/25 text-fg",
+  Study: "border-line text-muted",
   Work: "border-accent/60 text-accent-ink",
-  Teaching: "border-emerald-500/50 text-emerald-600 dark:text-emerald-400",
+  Teaching: "border-fg/25 text-muted",
 } as const;
 
 export default function Experience() {
@@ -15,14 +15,8 @@ export default function Experience() {
       <div className="shell">
         <SectionHeader
           id="exp-title"
-          index="04"
-          label="Experience"
-          title={
-            <>
-              Where I&apos;ve <em className="text-accent-ink">learned</em> &amp; taught.
-            </>
-          }
-          intro="Study, teaching and industry, from a live hotel's IT floor in Dubai to the lecture hall."
+          title="Experience"
+          intro="Where I've learned and taught, from a live hotel's IT floor in Dubai to the lecture hall."
         />
 
         <ol className="border-t border-line">
@@ -30,15 +24,15 @@ export default function Experience() {
             <li key={e.title + e.date} className="border-b border-line">
               <Reveal delay={i * 0.04} className="group grid gap-3 py-8 md:grid-cols-12 md:gap-8 md:py-10">
                 <div className="md:col-span-3">
-                  <p className="font-mono text-[0.78rem] tracking-wide text-muted">{e.date}</p>
-                  <span className={cn("mt-3 inline-block rounded-full border px-2.5 py-0.5 font-mono text-[0.65rem] uppercase tracking-widest", kindStyle[e.kind])}>
+                  <p className="figures text-[0.92rem] text-muted">{e.date}</p>
+                  <span className={cn("mt-3 inline-block rounded-full border px-2.5 py-0.5 text-[0.8rem]", kindStyle[e.kind])}>
                     {e.kind}
                   </span>
                 </div>
                 <div className="md:col-span-4">
                   <h3 className="font-display text-[1.75rem] leading-[1.1] transition-colors group-hover:text-accent-ink sm:text-[2rem]">{e.title}</h3>
                   <p className="mt-2 text-[0.92rem]">
-                    {e.org} <span className="text-muted">· {e.location}</span>
+                    {e.org}<span className="text-muted">, {e.location}</span>
                   </p>
                 </div>
                 <ul className="space-y-2.5 md:col-span-5 md:pt-1.5">

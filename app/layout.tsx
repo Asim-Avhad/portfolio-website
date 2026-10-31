@@ -10,6 +10,7 @@ import Footer from "@/components/Footer";
 import CommandMenu from "@/components/CommandMenu";
 import { themeScript } from "@/context/ThemeContext";
 import { site } from "@/lib/data";
+import { tokens } from "@/lib/tokens";
 
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ??
@@ -45,8 +46,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
-    { media: "(prefers-color-scheme: light)", color: "#f6f6f4" },
+    { media: "(prefers-color-scheme: dark)", color: tokens.dark.bg },
+    { media: "(prefers-color-scheme: light)", color: tokens.light.bg },
   ],
 };
 
@@ -56,7 +57,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body className="grain min-h-dvh overflow-x-hidden">
+      <body className="grain min-h-dvh">
         <Providers>
           <a
             href="#main"

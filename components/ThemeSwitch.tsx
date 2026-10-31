@@ -14,7 +14,7 @@ export default function ThemeSwitch() {
       onClick={toggleTheme}
       aria-label={label}
       title={label}
-      className="relative grid h-9 w-9 place-items-center overflow-hidden rounded-full border border-line bg-surface/70 text-muted transition hover:text-fg"
+      className="relative grid h-9 w-9 place-items-center overflow-hidden rounded-full border border-line bg-surface/70 text-muted transition-colors hover:text-fg active:translate-y-px"
     >
       <AnimatePresence mode="wait" initial={false}>
         <motion.span

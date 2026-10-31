@@ -3,10 +3,10 @@ import SectionHeader from "./SectionHeader";
 import Reveal from "./Reveal";
 
 const facts = [
-  { k: "Now", v: "Master of AI · Monash University" },
+  { k: "Now", v: "Master of AI, Monash University" },
   { k: "Based in", v: "Melbourne, VIC" },
   { k: "Route so far", v: "Nashik → Dubai → Melbourne" },
-  { k: "Focus", v: "NLP · GenAI · Deep learning · Planning" },
+  { k: "Focus", v: "NLP, GenAI, deep learning, planning" },
   { k: "Speaks", v: "English, Marathi" },
 ];
 
@@ -16,13 +16,8 @@ export default function About() {
       <div className="shell">
         <SectionHeader
           id="about-title"
-          index="03"
-          label="About"
-          title={
-            <>
-              Designer&apos;s eye, <em className="text-accent-ink">engineer&apos;s</em> habits.
-            </>
-          }
+          title="About me"
+          intro="Designer's eye, engineer's habits."
         />
 
         <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
@@ -34,7 +29,7 @@ export default function About() {
             <dl className="mt-12 divide-y divide-line border-y border-line">
               {facts.map((f) => (
                 <div key={f.k} className="flex items-baseline justify-between gap-6 py-3.5">
-                  <dt className="eyebrow shrink-0">{f.k}</dt>
+                  <dt className="shrink-0 text-[0.88rem] text-muted">{f.k}</dt>
                   <dd className="text-right text-[0.92rem]">{f.v}</dd>
                 </div>
               ))}

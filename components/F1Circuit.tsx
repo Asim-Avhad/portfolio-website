@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useInView, useReducedMotion } from "motion/react";
+import { useInView } from "motion/react";
 import F1Car from "./F1Car";
 import { cn } from "@/lib/utils";
+import { useHoverPause } from "@/context/MotionContext";
+import { useReducedMotionSafe } from "@/lib/hooks";
 
 // An original circuit (not a real track): long main straight, a hairpin and a twisty middle sector.
 const TRACK =
@@ -18,26 +20,35 @@ export default function F1Circuit() {
   const ref = useRef<HTMLDivElement>(null);
   const motionRef = useRef<SVGAnimateMotionElement>(null);
   const inView = useInView(ref, { once: true, margin: "-10% 0px" });
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   const [lap, setLap] = useState(1);
+  const [started, setStarted] = useState(false);
+  const { stopped, bind } = useHoverPause<HTMLDivElement>();
 
+  // Start the car once, the first time the circuit is seen.
   useEffect(() => {
-    if (!inView || reduce) return;
+    if (!inView || reduce || started) return;
     motionRef.current?.beginElement();
+    setStarted(true);
+  }, [inView, reduce, started]);
+
+  // The lap counter ticks with the car and stops whenever the car is paused.
+  useEffect(() => {
+    if (!started || stopped) return;
     const id = window.setInterval(() => setLap((l) => (l % TOTAL_LAPS) + 1), LAP_SECONDS * 1000);
     return () => window.clearInterval(id);
-  }, [inView, reduce]);
+  }, [started, stopped]);
 
   const lapsToBox = PIT_EVERY - ((lap - 1) % PIT_EVERY) - 1;
   const boxing = lapsToBox === 0;
 
   return (
-    <div ref={ref} className="relative">
-      <div className="flex items-center justify-between font-mono text-[0.68rem] uppercase tracking-widest text-muted">
+    <div ref={ref} className="motion-host relative" {...bind}>
+      <div className="figures flex items-center justify-between text-[0.85rem] text-muted">
         <span>
-          Lap <span className="text-fg tabular-nums">{String(lap).padStart(2, "0")}</span>/{TOTAL_LAPS}
+          Lap <span className="text-fg">{String(lap).padStart(2, "0")}</span> of {TOTAL_LAPS}
         </span>
-        <span className={cn("rounded-full px-2 py-0.5 transition-colors", boxing ? "animate-pulse bg-accent text-on-accent" : "")}>
+        <span className={cn("rounded-full px-2.5 py-0.5 transition-colors", boxing ? "bg-accent font-medium text-on-accent" : "")}>
           {boxing ? "Box, box" : (
             <>
               Box in <span className="text-fg tabular-nums">{lapsToBox}</span>
@@ -60,7 +71,7 @@ export default function F1Circuit() {
         <path d={TRACK} fill="none" className="stroke-muted" strokeWidth={0.8} strokeDasharray="3 6" opacity={0.6} />
         {/* start / finish */}
         <rect x={67} y={152} width={6} height={16} fill="url(#chequer)" />
-        <text x={70} y={182} textAnchor="middle" className="fill-muted font-mono" fontSize={7} letterSpacing={1}>
+        <text x={70} y={182} textAnchor="middle" className="fill-muted" fontSize={8}>
           S/F
         </text>
         {/* the car */}

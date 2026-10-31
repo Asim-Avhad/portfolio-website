@@ -17,11 +17,8 @@ export const site = {
   github: "https://github.com/Asim-Avhad",
   linkedin: "https://www.linkedin.com/in/asim-avhad/",
   resume: "/Asim-Avhad-Resume.pdf",
-  // Flip `open` to false (or change the text) when your situation changes.
-  status: {
-    open: true,
-    text: "Open to AI/ML & software roles",
-  },
+  // The hero's one sentence. Update it when your situation changes.
+  intro: "I'm Asim Avhad, studying AI at Monash and open to new roles.",
 } as const;
 
 export const links = [
@@ -65,7 +62,7 @@ export const featuredProjects: FeaturedProject[] = [
   {
     slug: "support-copilot",
     title: "Support Ticket Copilot",
-    kicker: "NLP · Retrieval · Generative AI",
+    kicker: "NLP, retrieval, generative AI",
     year: "2026",
     context: "Solo project",
     summary:
@@ -86,9 +83,9 @@ export const featuredProjects: FeaturedProject[] = [
   {
     slug: "flatland",
     title: "Flatland Train Scheduling",
-    kicker: "Multi-agent planning · Search",
+    kicker: "Multi-agent planning",
     year: "2026",
-    context: "Solo · Monash University",
+    context: "Solo, Monash University",
     summary:
       "Routing 152 trains with deadlines across one shared rail network without collisions, then replanning live when trains break down, inside strict time budgets.",
     highlights: [
@@ -106,9 +103,9 @@ export const featuredProjects: FeaturedProject[] = [
   {
     slug: "galaxy",
     title: "Galaxy Morphology & Redshift",
-    kicker: "Computer vision · Deep learning",
+    kicker: "Computer vision",
     year: "2025",
-    context: "1st place · project competition",
+    context: "1st place, project competition",
     summary:
       "CNNs trained on a GPU to classify galaxies by shape and estimate how far away they are (redshift) straight from telescope images, demoed live in a Flask app.",
     highlights: [
@@ -133,7 +130,7 @@ export const moreAiProjects: {
 }[] = [
   {
     title: "Deep Learning Kaggle Competition",
-    meta: "Solo · Monash · 2026",
+    meta: "Solo project at Monash, 2026",
     description:
       "Fine-tuned pretrained models, comparing architectures and settings on a validation split. Finished top 15 in the cohort.",
     stack: ["PyTorch", "Transfer learning"],
@@ -191,12 +188,12 @@ export const webProjects: WebProject[] = [
 export const olderProjects = [
   {
     title: "ScrapIT",
-    meta: "MERN · 2023–24",
+    meta: "MERN stack, 2023 to 2024",
     description: "A marketplace for listing and buying household scrap, with notifications and simplified payments.",
   },
   {
     title: "Data Structure Visualizer",
-    meta: "C++ · Graphics · 2023",
+    meta: "C++ and graphics, 2023",
     description: "Animated stacks, queues, linked lists and BSTs in C++. Led the team; 2nd place in the OOP-CG mini-project competition.",
   },
 ] as const;
@@ -216,18 +213,18 @@ export const experience: {
   points: string[];
 }[] = [
   {
-    date: "2026 – 2027",
+    date: "2026 to 2027",
     title: "Master of Artificial Intelligence",
     org: "Monash University",
     location: "Melbourne, VIC",
     kind: "Study",
     points: [
       "Semester 1 GPA 3.5 / 4.0, with 92% in Python programming.",
-      "Deep Learning · Planning and Automated Reasoning.",
+      "Units include Deep Learning, and Planning and Automated Reasoning.",
     ],
   },
   {
-    date: "Jun 2025 – Jan 2026",
+    date: "Jun 2025 to Jan 2026",
     title: "Guest Lecturer, Deep Learning",
     org: "K. K. Wagh Institute of Engineering",
     location: "Nashik, India",
@@ -237,7 +234,7 @@ export const experience: {
     ],
   },
   {
-    date: "2021 – 2025",
+    date: "2021 to 2025",
     title: "B.E. Computer Science & Design",
     org: "K. K. Wagh Institute of Engineering",
     location: "Nashik, India",
@@ -248,7 +245,7 @@ export const experience: {
     ],
   },
   {
-    date: "Dec 2023 – Jan 2024",
+    date: "Dec 2023 to Jan 2024",
     title: "IT & Cybersecurity Intern",
     org: "FIVE Holdings",
     location: "Dubai, UAE",
@@ -329,7 +326,7 @@ export const awards = [
 ] as const;
 
 export const certifications = [
-  { title: "Supervised Machine Learning", issuer: "Stanford · DeepLearning.AI" },
+  { title: "Supervised Machine Learning", issuer: "Stanford and DeepLearning.AI" },
   { title: "Full Stack Web Development", issuer: "Apna College" },
   { title: "Database Management Systems", issuer: "NPTEL" },
   { title: "Design Thinking", issuer: "IUCEE" },

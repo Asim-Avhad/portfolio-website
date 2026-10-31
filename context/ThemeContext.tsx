@@ -15,7 +15,7 @@ const ThemeContext = createContext<ThemeContextType | null>(null);
  * Runs before React hydrates (inlined in <head>) so the right theme paints
  * on the very first frame, with no flash of the wrong colours.
  */
-export const themeScript = `(function(){try{var t=localStorage.getItem('theme');if(t!=='light'&&t!=='dark'){t=window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'}var d=document.documentElement;d.classList.remove('light','dark');d.classList.add(t)}catch(e){document.documentElement.classList.add('dark')}})();`;
+export const themeScript = `(function(){try{var t=localStorage.getItem('theme');if(t!=='light'&&t!=='dark'){t=window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'}var d=document.documentElement;d.classList.remove('light','dark');d.classList.add(t,'js');if(localStorage.getItem('motion')==='paused')d.setAttribute('data-motion','paused')}catch(e){document.documentElement.classList.add('dark','js')}})();`;
 
 export default function ThemeContextProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>("dark");

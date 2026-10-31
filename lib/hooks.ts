@@ -42,3 +42,20 @@ export function useModKey() {
   }, []);
   return mod;
 }
+
+/**
+ * prefers-reduced-motion, read after hydration. Motion's own hook answers on the
+ * first client render, which can differ from the server's HTML and throw a
+ * hydration error (React #418) for visitors who reduce motion.
+ */
+export function useReducedMotionSafe() {
+  const [reduce, setReduce] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setReduce(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+  return reduce;
+}

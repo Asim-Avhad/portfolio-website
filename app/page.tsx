@@ -1,5 +1,4 @@
 import Intro from "@/components/Intro";
-import SectionDivider from "@/components/SectionDivider";
 import Projects from "@/components/Projects";
 import WebWork from "@/components/WebWork";
 import About from "@/components/About";
@@ -13,7 +12,6 @@ export default function Home() {
   return (
     <main id="main">
       <Intro />
-      <SectionDivider />
       <Projects />
       <WebWork />
       <About />

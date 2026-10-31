@@ -1,36 +1,37 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { motion, useInView, useReducedMotion } from "motion/react";
-import { useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { motion, useInView } from "motion/react";
+import { useHoverPause } from "@/context/MotionContext";
 import type { Visual } from "@/lib/data";
 import { cn } from "@/lib/utils";
+import { useReducedMotionSafe } from "@/lib/hooks";
 
 /* ------------------------------------------------------------------ */
 /* Support Ticket Copilot: the request flowing through the pipeline   */
 /* ------------------------------------------------------------------ */
 
 const steps = [
-  { tag: "input", title: "Customer message", body: "“I think I was charged twice for my coffee this morning?”" },
-  { tag: "classify", title: "Intent · fine-tuned DistilBERT", body: "transaction_charged_twice", mono: true },
-  { tag: "retrieve", title: "BM25 ⊕ embeddings → RRF", body: "help-centre §4.2 · §4.5 · §7.1", mono: true },
-  { tag: "draft", title: "Gemini / Ollama drafts reply", body: "“…a duplicate charge usually drops off within 2 days [1]…”" },
-  { tag: "guard", title: "Guardrails", body: "confident → send  ·  unsure → human  ·  fraud → escalate", mono: true },
+  { tag: "Input", title: "Customer message", body: "“I think I was charged twice for my coffee this morning?”" },
+  { tag: "Classify", title: "Intent from fine-tuned DistilBERT", body: "transaction_charged_twice", mono: true },
+  { tag: "Retrieve", title: "BM25 and embeddings, fused with RRF", body: "help-centre §4.2, §4.5, §7.1", mono: true },
+  { tag: "Draft", title: "Gemini or Ollama drafts the reply", body: "“…a duplicate charge usually drops off within 2 days [1]…”" },
+  { tag: "Guard", title: "Guardrails", body: "Confident: send. Unsure: a person. Fraud: escalate." },
 ];
 
-function Pipeline({ active }: { active: boolean }) {
+function Pipeline({ active, stopped }: { active: boolean; stopped: boolean }) {
   const [step, setStep] = useState(0);
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
 
   useEffect(() => {
-    if (!active || reduce) return;
+    if (!active || reduce || stopped) return;
     const id = window.setInterval(() => setStep((s) => (s + 1) % steps.length), 1500);
     return () => window.clearInterval(id);
-  }, [active, reduce]);
+  }, [active, reduce, stopped]);
 
   return (
-    <ol className="relative flex flex-col gap-2.5">
-      <span className="absolute bottom-6 left-[1.05rem] top-6 w-px bg-line" aria-hidden />
+    <ol className="relative flex flex-col gap-4">
+      <span className="absolute bottom-3 left-[0.42rem] top-3 w-px bg-line" aria-hidden />
       {steps.map((s, i) => {
         const on = reduce || i === step;
         const done = i < step;
@@ -38,21 +39,16 @@ function Pipeline({ active }: { active: boolean }) {
           <li key={s.tag} className="relative flex items-start gap-3">
             <span
               className={cn(
-                "relative z-10 mt-2.5 grid h-[0.9rem] w-[0.9rem] shrink-0 translate-x-[0.6rem] place-items-center rounded-full border transition-colors duration-500",
+                "relative z-10 mt-1 h-[0.9rem] w-[0.9rem] shrink-0 rounded-full border transition-colors duration-500",
                 on ? "border-accent bg-accent" : done ? "border-accent bg-bg" : "border-line bg-bg",
               )}
             />
-            <div
-              className={cn(
-                "ml-3 flex-1 rounded-xl border px-3.5 py-2.5 transition-all duration-500",
-                on ? "border-accent/60 bg-accent/[0.08]" : "border-line bg-bg/60",
-              )}
-            >
-              <div className="flex items-center justify-between gap-3">
-                <p className="text-[0.8rem] font-medium">{s.title}</p>
-                <span className="font-mono text-[0.62rem] uppercase tracking-widest text-muted">{s.tag}</span>
+            <div className={cn("flex-1 transition-opacity duration-500", on ? "opacity-100" : "opacity-55")}>
+              <div className="flex items-baseline justify-between gap-3">
+                <p className={cn("text-[0.9rem] font-medium transition-colors duration-500", on && "text-accent-ink")}>{s.title}</p>
+                <span className="text-[0.75rem] text-muted">{s.tag}</span>
               </div>
-              <p className={cn("mt-1 text-[0.78rem] leading-snug text-muted", s.mono && "font-mono text-[0.72rem]")}>{s.body}</p>
+              <p className={cn("mt-1 text-[0.85rem] leading-snug text-muted", s.mono && "font-mono text-[0.8rem]")}>{s.body}</p>
             </div>
           </li>
         );
@@ -80,15 +76,18 @@ const toPath = (pts: [number, number][]) =>
   "M" + pts.map(([x, y]) => `${x * CELL + CELL / 2} ${y * CELL + CELL / 2}`).join(" L");
 
 function Rail({ active }: { active: boolean }) {
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   const W = COLS * CELL;
   const H = ROWS * CELL;
   return (
     <div>
       <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label="Four trains routed across a shared rail grid without collisions">
-        {Array.from({ length: COLS * ROWS }).map((_, i) => (
-          <circle key={i} cx={(i % COLS) * CELL + CELL / 2} cy={Math.floor(i / COLS) * CELL + CELL / 2} r={1.2} className="fill-muted/40" />
-        ))}
+        <defs>
+          <pattern id="rail-grid" width={CELL} height={CELL} patternUnits="userSpaceOnUse" x={CELL / 2} y={CELL / 2}>
+            <path d={`M${CELL} 0 L0 0 0 ${CELL}`} fill="none" className="stroke-line" strokeWidth={1} />
+          </pattern>
+        </defs>
+        <rect x={CELL / 2} y={CELL / 2} width={W - CELL} height={H - CELL} fill="url(#rail-grid)" />
         {routes.map((r, i) => {
           const d = toPath(r.pts);
           return (
@@ -123,14 +122,14 @@ function Rail({ active }: { active: boolean }) {
           );
         })}
       </svg>
-      <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-[0.68rem] uppercase tracking-widest text-muted">
+      <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-[0.8rem] text-muted">
         <span className="flex items-center gap-2">
-          <span className="h-2 w-2 rounded-full border border-muted" /> origin
+          <span className="h-2 w-2 rounded-full border border-muted" aria-hidden /> Origin
         </span>
         <span className="flex items-center gap-2">
-          <span className="h-2 w-2 border border-muted" /> target
+          <span className="h-2 w-2 border border-muted" aria-hidden /> Target
         </span>
-        <span>space-time A* · LNS repair</span>
+        <span>Space-time A* with LNS repair</span>
       </div>
     </div>
   );
@@ -151,7 +150,7 @@ function mulberry32(seed: number) {
 }
 
 function Galaxy({ active }: { active: boolean }) {
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   const stars = useMemo(() => {
     const rand = mulberry32(42);
     const pts: { x: number; y: number; r: number; o: number }[] = [];
@@ -161,11 +160,13 @@ function Galaxy({ active }: { active: boolean }) {
       const radius = 6 + t * 26;
       const angle = t * 1.55 + arm * Math.PI + (rand() - 0.5) * 0.55;
       const spread = (rand() - 0.5) * (6 + t * 4);
+      // Rounded so the server and the browser print identical attributes.
+      const r2 = (n: number) => Math.round(n * 100) / 100;
       pts.push({
-        x: Math.cos(angle) * radius + spread,
-        y: (Math.sin(angle) * radius + spread) * 0.62,
-        r: rand() * 1.3 + 0.35,
-        o: Math.max(0.25, 1 - t / 4.6) * (0.55 + rand() * 0.45),
+        x: r2(Math.cos(angle) * radius + spread),
+        y: r2((Math.sin(angle) * radius + spread) * 0.62),
+        r: r2(rand() * 1.3 + 0.35),
+        o: r2(Math.max(0.25, 1 - t / 4.6) * (0.55 + rand() * 0.45)),
       });
     }
     return pts;
@@ -175,21 +176,17 @@ function Galaxy({ active }: { active: boolean }) {
     <div className="grid gap-5">
       <div className="relative">
         <svg viewBox="-160 -90 320 180" className="h-auto w-full" role="img" aria-label="A spiral galaxy inside a detection box labelled with its predicted class">
-          <motion.g
-            animate={active && !reduce ? { rotate: 360 } : undefined}
-            transition={{ duration: 120, repeat: Infinity, ease: "linear" }}
-            style={{ originX: "0px", originY: "0px" }}
-          >
+          <g className={active && !reduce ? "spin-slow" : undefined} style={{ transformOrigin: "0px 0px" }}>
             {stars.map((s, i) => (
               <circle key={i} cx={s.x} cy={s.y} r={s.r} className="fill-fg" opacity={s.o} />
             ))}
             <circle r={7} className="fill-accent" opacity={0.9} />
             <circle r={16} className="fill-accent" opacity={0.12} />
-          </motion.g>
+          </g>
           <g className="stroke-accent" strokeWidth={1} fill="none">
             <path d="M-118 -70 h14 M-118 -70 v14 M118 -70 h-14 M118 -70 v14 M-118 70 h14 M-118 70 v-14 M118 70 h-14 M118 70 v-14" />
           </g>
-          <g className="fill-accent font-mono" fontSize={8} letterSpacing={0.8}>
+          <g className="fill-accent font-mono" fontSize={8}>
             <text x={-118} y={-76}>class: spiral</text>
             <text x={118} y={82} textAnchor="end">
               redshift: ẑ
@@ -198,14 +195,14 @@ function Galaxy({ active }: { active: boolean }) {
         </svg>
       </div>
 
-      <div className="flex items-center justify-between gap-2 rounded-xl border border-line bg-bg/60 px-4 py-3">
+      <div className="flex items-center justify-between gap-2 border-t border-line pt-4">
         <div className="flex items-end gap-1.5" aria-hidden>
           {[28, 24, 20, 16, 12].map((h, i) => (
             <span key={i} className="block w-2.5 rounded-sm border border-fg/30 bg-fg/[0.06]" style={{ height: h }} />
           ))}
         </div>
-        <span className="font-mono text-[0.68rem] uppercase tracking-widest text-muted">CNN features</span>
-        <span className="text-accent-ink">→</span>
+        <span className="text-[0.8rem] text-muted">CNN features</span>
+        <span className="text-accent-ink" aria-hidden>→</span>
         <div className="flex flex-col gap-1" aria-hidden>
           {[0, 1, 2].map((r) => (
             <div key={r} className="flex gap-1">
@@ -215,7 +212,7 @@ function Galaxy({ active }: { active: boolean }) {
             </div>
           ))}
         </div>
-        <span className="font-mono text-[0.68rem] uppercase tracking-widest text-muted">MLP → z</span>
+        <span className="text-[0.8rem] text-muted">MLP, then redshift</span>
       </div>
     </div>
   );
@@ -224,10 +221,11 @@ function Galaxy({ active }: { active: boolean }) {
 export default function ProjectVisual({ type }: { type: Visual }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-15% 0px" });
+  const { stopped, bind } = useHoverPause<HTMLDivElement>();
 
   return (
-    <div ref={ref} className="w-full">
-      {type === "pipeline" && <Pipeline active={inView} />}
+    <div ref={ref} className="motion-host w-full" {...bind}>
+      {type === "pipeline" && <Pipeline active={inView} stopped={stopped} />}
       {type === "rail" && <Rail active={inView} />}
       {type === "galaxy" && <Galaxy active={inView} />}
     </div>

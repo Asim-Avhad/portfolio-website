@@ -10,13 +10,7 @@ export default function Projects() {
       <div className="shell">
         <SectionHeader
           id="work-title"
-          index="01"
-          label="Selected work"
-          title={
-            <>
-              Recent AI work, <em className="text-accent-ink">measured</em>.
-            </>
-          }
+          title="Recent AI work, measured."
           intro="I care about whether a model actually helps, so every project here comes with the number that proves it, and a plan for when it's unsure."
         />
 
@@ -26,17 +20,17 @@ export default function Projects() {
           ))}
         </div>
 
-        <div className="mt-6 grid gap-6 sm:mt-8 sm:gap-8 md:grid-cols-2">
+        <div className="mt-6 grid items-start gap-6 sm:mt-8 sm:gap-8 md:grid-cols-2">
           {moreAiProjects.map((p, i) => (
             <Reveal key={p.title} delay={i * 0.08}>
-              <article className="flex h-full flex-col rounded-[1.5rem] border border-line bg-surface/70 p-6 transition-colors hover:border-fg/20 sm:p-8">
+              <article className="flex h-full flex-col rounded-[1.5rem] border border-line bg-surface/70 p-6 sm:p-8">
                 {p.visual === "circuit" && (
-                  <div className="mb-6 rounded-2xl border border-line bg-bg/50 p-4">
+                  <div className="mb-6 border-b border-line pb-6">
                     <F1Circuit />
                   </div>
                 )}
-                <p className="eyebrow">{p.meta}</p>
-                <h3 className="mt-4 font-display text-3xl leading-tight">{p.title}</h3>
+                <h3 className="font-display text-3xl leading-tight">{p.title}</h3>
+                <p className="mt-1 text-[0.88rem] text-muted">{p.meta}</p>
                 <p className="mt-3 flex-1 text-[0.95rem] leading-relaxed text-muted">{p.description}</p>
                 <ul className="mt-6 flex flex-wrap gap-1.5">
                   {p.stack.map((t) => (

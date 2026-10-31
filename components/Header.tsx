@@ -2,12 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { FiArrowUpRight, FiMenu, FiX, FiCommand } from "react-icons/fi";
+import { FiMenu, FiX, FiCommand } from "react-icons/fi";
 import { links, site } from "@/lib/data";
 import { useActiveSectionContext } from "@/context/ActiveSectionContext";
 import { useModKey, useScrolled } from "@/lib/hooks";
 import { cn } from "@/lib/utils";
 import ThemeSwitch from "./ThemeSwitch";
+import MotionSwitch from "./MotionSwitch";
 import { openCommandMenu } from "./CommandMenu";
 
 export default function Header() {
@@ -40,7 +41,7 @@ export default function Header() {
           </a>
 
           <nav aria-label="Primary" className="hidden md:block">
-            <ul className="flex items-center gap-1 rounded-full border border-line bg-surface/60 p-1 backdrop-blur">
+            <ul className="flex items-center gap-1 rounded-full border border-line bg-surface/90 p-1 backdrop-blur">
               {links.map((link) => {
                 const active = activeSection === link.name;
                 return (
@@ -59,7 +60,7 @@ export default function Header() {
                       <motion.span
                         layoutId="nav-pill"
                         className="absolute inset-0 rounded-full bg-elev ring-1 ring-line"
-                        transition={{ type: "spring", stiffness: 420, damping: 34 }}
+                        transition={{ type: "tween", duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
                       />
                     )}
                   </li>
@@ -72,21 +73,22 @@ export default function Header() {
             <button
               type="button"
               onClick={openCommandMenu}
-              className="hidden h-9 items-center gap-2 rounded-full border border-line bg-surface/70 pl-3 pr-2 text-[0.8rem] text-muted transition hover:text-fg sm:flex"
+              className="hidden h-9 items-center gap-2 rounded-full border border-line bg-surface/70 pl-3 pr-2 text-[0.85rem] text-muted transition hover:text-fg active:translate-y-px sm:flex"
               aria-label="Open command menu"
             >
-              <FiCommand size={13} />
+              <FiCommand size={13} aria-hidden />
               <span>Quick nav</span>
-              <kbd className="rounded-md border border-line bg-bg px-1.5 py-0.5 font-mono text-[0.68rem]">{mod} K</kbd>
+              <kbd className="rounded-md border border-line bg-bg px-1.5 py-0.5 font-mono text-[0.75rem]">{mod} K</kbd>
             </button>
+            <MotionSwitch />
             <ThemeSwitch />
             <a
               href={site.resume}
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden h-9 items-center gap-1 rounded-full bg-fg px-4 text-[0.85rem] font-medium text-bg transition hover:bg-accent hover:text-on-accent lg:flex"
+              className="hidden h-9 items-center rounded-full border border-fg/40 px-4 text-[0.85rem] font-medium transition hover:border-fg active:translate-y-px lg:flex"
             >
-              Résumé <FiArrowUpRight size={14} />
+              Résumé
             </a>
             <button
               type="button"
@@ -128,7 +130,6 @@ export default function Header() {
                     className="flex items-baseline justify-between py-4 font-display text-4xl"
                   >
                     {link.name}
-                    <span className="font-mono text-xs text-muted">0{i + 1}</span>
                   </a>
                 </motion.li>
               ))}
@@ -140,7 +141,7 @@ export default function Header() {
                 rel="noopener noreferrer"
                 className="flex h-11 items-center gap-1.5 rounded-full bg-accent px-5 text-sm font-medium text-on-accent"
               >
-                Résumé <FiArrowUpRight />
+                Résumé
               </a>
               <a href={`mailto:${site.email}`} className="flex h-11 items-center rounded-full border border-line px-5 text-sm">
                 Email me

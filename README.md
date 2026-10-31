@@ -17,7 +17,7 @@ npm run build && npm start
 Everything you'd want to change lives in **`lib/data.ts`**: the status pill, projects, experience, skills, awards and the "off the clock" facts. Components only read from it.
 
 - **Add a GitHub / demo link to an AI project:** set `repo` or `demo` on it in `featuredProjects` and a button appears.
-- **Change availability:** edit `site.status` (set `open: false` to hide the pill).
+- **Change the hero line:** edit `site.intro` (one sentence, twelve words or fewer).
 - **Résumé:** replace `public/Asim-Avhad-Resume.pdf`.
 
 ## Contact form
@@ -36,6 +36,8 @@ Without a key the form shows a friendly "email me directly" message instead of f
 - **Type:** Instrument Serif (display), Geist Sans (body), Geist Mono (labels).
 - **Hero background:** `public/contours.svg` is a topographic map generated from a height field; the animated line is a real gradient-descent path on that same field. Trekking meets loss landscapes.
 - **F1 touches:** the F1 project card has a car lapping an original circuit with a lap counter and pit-stop countdown; another car crosses a chequered strip in the footer (`components/F1Car.tsx`, `F1Circuit.tsx`, `FinishLine.tsx`).
+- **Pause control:** the pause button in the header stops every looping animation (the cars, trains, galaxy and descent line); hovering a diagram pauses it too. The choice is remembered.
+- **Hallmark:** `app/globals.css` opens with a Hallmark check stamp recording this polish; `.hallmark/` holds the before/after record (`compare.html`).
 - **Quick nav:** press <kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>K</kbd> anywhere.
 - Respects `prefers-reduced-motion`.
 

@@ -2,9 +2,10 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { FiArrowRight, FiCopy, FiFileText, FiGithub, FiLinkedin, FiMail, FiSearch, FiSun } from "react-icons/fi";
+import { FiArrowRight, FiCopy, FiFileText, FiGithub, FiLinkedin, FiMail, FiPause, FiSearch, FiSun } from "react-icons/fi";
 import { links, site } from "@/lib/data";
 import { useTheme } from "@/context/ThemeContext";
+import { useMotionPause } from "@/context/MotionContext";
 import { cn } from "@/lib/utils";
 
 const OPEN_EVENT = "command-menu:open";
@@ -30,6 +31,7 @@ export default function CommandMenu() {
   const [toast, setToast] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const { toggleTheme } = useTheme();
+  const { paused, togglePaused } = useMotionPause();
 
   const close = useCallback(() => {
     setOpen(false);
@@ -66,11 +68,12 @@ export default function CommandMenu() {
       },
       { id: "email", label: "Write me an email", group: "Actions", icon: <FiMail />, run: () => (window.location.href = `mailto:${site.email}`) },
       { id: "resume", label: "Open résumé (PDF)", group: "Actions", icon: <FiFileText />, run: () => window.open(site.resume, "_blank") },
-      { id: "theme", label: "Toggle light / dark", group: "Actions", icon: <FiSun />, run: toggleTheme },
+      { id: "theme", label: "Switch light and dark", group: "Actions", icon: <FiSun />, run: toggleTheme },
+      { id: "motion", label: paused ? "Play animations" : "Pause animations", group: "Actions", icon: <FiPause />, run: togglePaused },
       { id: "github", label: "GitHub", group: "Elsewhere", icon: <FiGithub />, hint: "Asim-Avhad", run: () => window.open(site.github, "_blank") },
       { id: "linkedin", label: "LinkedIn", group: "Elsewhere", icon: <FiLinkedin />, hint: "asim-avhad", run: () => window.open(site.linkedin, "_blank") },
     ],
-    [toggleTheme],
+    [toggleTheme, togglePaused, paused],
   );
 
   const filtered = useMemo(() => {
@@ -142,7 +145,7 @@ export default function CommandMenu() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -10, scale: 0.98 }}
               transition={{ duration: 0.18 }}
-              className="w-full max-w-lg overflow-hidden rounded-2xl border border-line bg-elev shadow-2xl shadow-black/40"
+              className="w-full max-w-lg overflow-hidden rounded-2xl border border-line bg-elev"
               onKeyDown={onKeyDown}
             >
               <div className="flex items-center gap-3 border-b border-line px-4">
@@ -152,13 +155,13 @@ export default function CommandMenu() {
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Jump to a section or run an action…"
-                  className="h-14 w-full bg-transparent text-[0.95rem] outline-none placeholder:text-muted focus-visible:ring-0"
+                  className="h-14 w-full bg-transparent text-[0.95rem] outline-none placeholder:text-muted"
                   aria-controls="command-list"
                   aria-activedescendant={filtered[index] ? `cmd-${filtered[index].id}` : undefined}
                   role="combobox"
                   aria-expanded="true"
                 />
-                <kbd className="rounded-md border border-line px-1.5 py-0.5 font-mono text-[0.65rem] text-muted">ESC</kbd>
+                <kbd className="rounded-md border border-line px-1.5 py-0.5 font-mono text-[0.75rem] text-muted">Esc</kbd>
               </div>
               <ul id="command-list" role="listbox" className="max-h-[50vh] overflow-y-auto p-2">
                 {filtered.length === 0 && <li className="px-3 py-8 text-center text-sm text-muted">Nothing matches “{query}”.</li>}
@@ -167,7 +170,7 @@ export default function CommandMenu() {
                   lastGroup = item.group;
                   return (
                     <li key={item.id} role="presentation">
-                      {header && <p className="eyebrow px-3 pb-1.5 pt-3 !text-[0.65rem]">{header}</p>}
+                      {header && <p className="px-3 pb-1.5 pt-3 text-[0.8rem] text-muted">{header}</p>}
                       <button
                         id={`cmd-${item.id}`}
                         role="option"
@@ -181,7 +184,7 @@ export default function CommandMenu() {
                       >
                         <span className={cn(i === index ? "text-on-accent" : "text-muted")}>{item.icon}</span>
                         <span className="flex-1">{item.label}</span>
-                        {item.hint && <span className={cn("font-mono text-xs", i === index ? "text-on-accent/70" : "text-muted")}>{item.hint}</span>}
+                        {item.hint && <span className={cn("text-[0.8rem]", i === index ? "text-on-accent/80" : "text-muted")}>{item.hint}</span>}
                       </button>
                     </li>
                   );

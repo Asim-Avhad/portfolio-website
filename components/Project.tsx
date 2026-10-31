@@ -1,6 +1,6 @@
 "use client";
 
-import { FiArrowUpRight, FiGithub } from "react-icons/fi";
+import { FiGithub } from "react-icons/fi";
 import type { FeaturedProject } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import ProjectVisual from "./ProjectVisual";
@@ -15,22 +15,18 @@ export default function Project({ index, title, kicker, year, context, summary, 
     <Reveal>
       <article
         aria-labelledby={`project-${index}`}
-        className="group relative grid overflow-hidden rounded-[1.75rem] border border-line bg-surface/70 transition-colors hover:border-fg/20 lg:grid-cols-12"
+        className="relative grid overflow-hidden rounded-[1.75rem] border border-line bg-surface/70 lg:grid-cols-12"
       >
         {/* Copy */}
         <div className={cn("flex flex-col p-6 sm:p-9 lg:col-span-7 lg:p-11", flip && "lg:order-2")}>
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-            <span className="font-mono text-[0.75rem] text-accent-ink">{String(index + 1).padStart(2, "0")}</span>
-            <span className="eyebrow">{kicker}</span>
-          </div>
-
-          <h3 id={`project-${index}`} className="mt-5 font-display text-[2.4rem] leading-[1] sm:text-5xl">
+          <h3 id={`project-${index}`} className="font-display text-[2.4rem] leading-[1.02] sm:text-5xl">
             {title}
           </h3>
 
           <div className="mt-4 flex flex-wrap gap-2">
-            <span className="chip">{year}</span>
+            <span className="chip figures">{year}</span>
             <span className="chip">{context}</span>
+            <span className="chip">{kicker}</span>
           </div>
 
           <p className="mt-6 max-w-[58ch] text-[1.02rem] leading-relaxed text-fg/85">{summary}</p>
@@ -44,13 +40,13 @@ export default function Project({ index, title, kicker, year, context, summary, 
             ))}
           </ul>
 
-          <dl className={cn("mt-8 grid gap-px overflow-hidden rounded-2xl border border-line bg-line", metrics.length === 3 ? "grid-cols-1 sm:grid-cols-3" : "grid-cols-2")}>
+          <dl className={cn("mt-8 grid border-t border-line", metrics.length === 3 ? "grid-cols-1 sm:grid-cols-3" : "grid-cols-2")}>
             {metrics.map((m) => (
-              <div key={m.label} className="bg-surface p-4">
+              <div key={m.label} className="border-line py-4 pr-4 sm:[&:not(:first-child)]:border-l sm:[&:not(:first-child)]:pl-4 [&:not(:first-child)]:border-t sm:[&:not(:first-child)]:border-t-0">
                 <dt className="sr-only">{m.label}</dt>
                 <dd>
-                  <span className="block whitespace-nowrap font-display text-[1.9rem] leading-none sm:text-[1.7rem] xl:text-[2rem]">{m.value}</span>
-                  <span className="mt-2 block text-[0.75rem] leading-snug text-muted">{m.label}</span>
+                  <span className="figures block whitespace-nowrap font-display text-[1.9rem] leading-none sm:text-[1.7rem] xl:text-[2rem]">{m.value}</span>
+                  <span className="mt-2 block text-[0.8rem] leading-snug text-muted">{m.label}</span>
                 </dd>
               </div>
             ))}
@@ -68,12 +64,12 @@ export default function Project({ index, title, kicker, year, context, summary, 
             <div className="mt-7 flex gap-3">
               {demo && (
                 <a href={demo} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm font-medium link-underline">
-                  Live demo <FiArrowUpRight />
+                  Live demo
                 </a>
               )}
               {repo && (
                 <a href={repo} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm font-medium link-underline">
-                  <FiGithub /> Source
+                  <FiGithub aria-hidden /> Source
                 </a>
               )}
             </div>
@@ -87,10 +83,6 @@ export default function Project({ index, title, kicker, year, context, summary, 
             flip ? "lg:order-1 lg:border-r" : "lg:border-l",
           )}
         >
-          <div
-            aria-hidden
-            className="absolute inset-0 opacity-[0.5] [background-image:linear-gradient(rgb(var(--line))_1px,transparent_1px),linear-gradient(90deg,rgb(var(--line))_1px,transparent_1px)] [background-size:28px_28px] [mask-image:radial-gradient(ellipse_at_center,#000_30%,transparent_75%)]"
-          />
           <div className="relative w-full">
             <ProjectVisual type={visual} />
           </div>

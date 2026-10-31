@@ -23,6 +23,11 @@ const config: Config = {
         accent: token("accent"),
         "accent-ink": token("accent-ink"),
         "on-accent": token("on-accent"),
+        ok: token("ok"),
+        "photo-fg": token("photo-fg"),
+        "photo-muted": token("photo-muted"),
+        "photo-ink": token("photo-ink"),
+        "photo-shade": token("photo-shade"),
       },
       fontFamily: {
         sans: ["var(--font-geist-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
@@ -31,20 +36,6 @@ const config: Config = {
       },
       maxWidth: {
         shell: "76rem",
-      },
-      keyframes: {
-        marquee: {
-          from: { transform: "translateX(0)" },
-          to: { transform: "translateX(-50%)" },
-        },
-        pulseDot: {
-          "0%, 100%": { opacity: "1", transform: "scale(1)" },
-          "50%": { opacity: "0.35", transform: "scale(0.85)" },
-        },
-      },
-      animation: {
-        marquee: "marquee 40s linear infinite",
-        "pulse-dot": "pulseDot 2s ease-in-out infinite",
       },
     },
   },

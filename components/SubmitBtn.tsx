@@ -10,7 +10,7 @@ export default function SubmitBtn() {
     <button
       type="submit"
       disabled={pending}
-      className="group inline-flex h-12 items-center justify-center gap-2 rounded-full bg-accent px-7 font-medium text-on-accent transition hover:brightness-105 disabled:cursor-wait disabled:opacity-70"
+      className="group inline-flex h-12 items-center justify-center gap-2 rounded-full bg-accent px-7 font-medium text-on-accent transition hover:brightness-105 active:translate-y-px disabled:cursor-not-allowed disabled:opacity-70"
     >
       {pending ? (
         <>

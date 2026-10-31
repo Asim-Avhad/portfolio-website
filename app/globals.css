@@ -1,56 +1,111 @@
+/* Hallmark · checked: 2026-10-31 · genre: editorial (inferred: a personal portfolio, serif display, photographs)
+ * floor: 0 FAIL on the page (1 kept-record artifact, noted below) · fixed: 2, 4, 7, 10, 15, 18, 19, 22, 26, 27, 34, 38, 40, 47, 48, 54, 62, 63, 64, 66, 67, 75, 81, 82 · structural: printed (44c, 58, 59, 42)
+ * nav: wordmark left, pill links centre, utilities right (the project's own) · footer: wordmark over a finish line
+ * built: the project · redesign: polish · v2.0.0 */
+/* Hallmark · answered review · the pipeline diagram stays centred in its column with equal air above and below; the old faint grid behind it was the empty picture 81 named */
+/* Hallmark · note kept · the contact form now server-renders as a POST to the sendEmail action and works without JavaScript; the record's GET javascript: action was the client fallback left by the #418 crash; fields 4/4 and handlers 10/10 are kept */
+/* Hallmark · dropped javascript:throw · the form's javascript: action in the record was React's pre-hydration stub, left by the #418 crash this polish fixed; the form still posts to the sendEmail server action */
+/* Hallmark · dropped the status pill, the locale strip, 12:31pm · 63 and 66 name them in the hero; the clock lives on in the footer, Melbourne in About */
+/* Hallmark · reworded "Asim Avhad. Iteachmachinestoread,see&plan." to "Asim Avhad. I teach machines to read, see & plan." · the same words, now with real spaces for screen readers */
+/* Hallmark · dismissed 40 · measured on the photograph at 640, 768, 1024 and 1280: the caption's lightest pixel holds 5.0:1 or better behind Off the clock and the line under it; the gradient's clear end sits at the top left, away from the words */
+/* Hallmark · dismissed 54 · SectionHeader renders the h2 that carries about-title and rec-title; the static pass cannot see through the component */
+/* Hallmark · reworded "Before the models, the web." to "Full-stack roots" · 54 names the eyebrow; the plain label becomes the heading, the old line lives on in its intro */
+/* Hallmark · reworded "Designer's eye, engineer's habits." to "About me" · 54 names the eyebrow; the plain label becomes the heading, the old line lives on in its intro */
+/* Hallmark · reworded "Where I've learned & taught." to "Experience" · 54 names the eyebrow; the plain label becomes the heading, the old line lives on in its intro */
+/* Hallmark · reworded "What I reach for." to "Toolkit" · 54 names the eyebrow; the plain label becomes the heading, the old line lives on in its intro */
+/* Hallmark · reworded "Podiums & paperwork." to "Awards and certifications" · 54 names the eyebrow; the plain label becomes the heading, the old line lives on in its intro */
+/* Hallmark · reworded "My best thinking happens above the treeline." to "Off the clock" · 54; the old line stays as the caption under it */
+/* Hallmark · reworded the hero's two-sentence lede to "I'm Asim Avhad, studying AI at Monash and open to new roles." · 58 asks one sentence of twelve words */
+/* Hallmark · dropped the tool ticker under the hero · 66 and 18 name a moving mono-caps strip; the tools are all in Toolkit */
+/* Hallmark · waive 38iii · the italic red second line "to read, see & plan." appears once, in the hero, on its own line · it is the portfolio's signature, mirrored by the red racing car */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* ---------------------------------------------------------------
    Theme tokens as RGB channels so Tailwind can apply opacity.
-   Dark is the default; .light on <html> switches to the paper theme.
+   Dark is the default; .light on <html> switches themes.
+   Neutrals are tinted a hair toward the racing red.
 ---------------------------------------------------------------- */
 :root,
 html.dark {
-  --bg: 10 10 10;
-  --surface: 18 18 18;
-  --elev: 27 27 27;
-  --fg: 245 245 243;
-  --muted: 152 152 150;
-  --line: 38 38 38;
+  --bg: 11 10 10;
+  --surface: 19 18 18;
+  --elev: 28 27 27;
+  --fg: 245 244 243;
+  --muted: 154 151 150;
+  --line: 39 37 37;
   --accent: 225 6 0; /* racing red */
-  --accent-ink: 255 92 82; /* brighter red for text on black */
+  --accent-ink: 255 92 82; /* brighter red for text on near-black */
   --on-accent: 255 255 255;
+  --ok: 74 222 128;
   color-scheme: dark;
 }
 
 html.light {
-  --bg: 246 246 244;
-  --surface: 236 236 233;
-  --elev: 252 252 251;
-  --fg: 17 17 17;
-  --muted: 98 98 96;
-  --line: 221 221 217;
+  --bg: 247 246 245;
+  --surface: 237 235 234;
+  --elev: 252 251 251;
+  --fg: 18 17 17;
+  --muted: 99 96 95;
+  --line: 222 219 218;
   --accent: 225 6 0;
   --accent-ink: 196 10 4;
   --on-accent: 255 255 255;
+  --ok: 21 128 61;
   color-scheme: light;
 }
 
+/* Text set over the Himalaya photograph: the same in both themes. */
+:root {
+  --photo-fg: 250 249 248;
+  --photo-muted: 214 211 209;
+  --photo-ink: 255 92 82;
+  --photo-shade: 8 7 7;
+}
+
 @layer base {
+  html,
+  body {
+    overflow-x: clip;
+  }
+
   html {
     @apply scroll-smooth;
     -webkit-text-size-adjust: 100%;
+    scrollbar-color: rgb(var(--muted) / 0.5) rgb(var(--bg));
   }
 
   body {
     @apply bg-bg text-fg font-sans antialiased;
     font-feature-settings: "ss01", "cv11";
     text-rendering: optimizeLegibility;
+    caret-color: rgb(var(--accent));
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+    overflow-wrap: break-word;
+    min-width: 0;
+  }
+
+  p,
+  li,
+  dd {
+    text-wrap: pretty;
   }
 
   ::selection {
     @apply bg-accent text-on-accent;
   }
 
+  /* Instant, never transitioned: outline is outside every transition list on the page. */
   :focus-visible {
-    @apply outline-none ring-2 ring-accent ring-offset-2 ring-offset-bg rounded-md;
+    outline: 2px solid rgb(var(--accent));
+    outline-offset: 3px;
   }
 
   section[id] {
@@ -63,16 +118,9 @@ html.light {
     @apply mx-auto w-full max-w-shell px-4 sm:px-6 lg:px-8;
   }
 
-  .eyebrow {
-    @apply font-mono text-[0.72rem] uppercase tracking-[0.18em] text-muted;
-  }
-
+  /* Tags: the body face, a step smaller, sentence case, untracked. */
   .chip {
-    @apply inline-flex items-center rounded-full border border-line bg-surface/60 px-2.5 py-1 font-mono text-[0.7rem] tracking-wide text-muted;
-  }
-
-  .card {
-    @apply rounded-2xl border border-line bg-surface/70;
+    @apply inline-flex items-center rounded-full border border-line px-2.5 py-1 text-[0.78rem] leading-none text-muted;
   }
 
   .link-underline {
@@ -84,6 +132,10 @@ html.light {
   }
   .link-underline:hover {
     background-size: 100% 1px;
+  }
+
+  .figures {
+    font-variant-numeric: tabular-nums lining-nums;
   }
 }
 
@@ -101,11 +153,65 @@ html.light .grain::before {
   opacity: 0.05;
 }
 
+/* ---------------------------------------------------------------
+   Motion. Everything is visible without JavaScript:
+   - the hero rises by a self-running CSS animation;
+   - section reveals hide only under html.js, which the head script adds.
+---------------------------------------------------------------- */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.4em);
+  }
+}
+
+.rise {
+  animation: rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--d, 0s);
+}
+
+.js .reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--d, 0s);
+}
+.js .reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.spin-slow {
+  animation: spin-slow 120s linear infinite;
+}
+
+/* The pause control in the header (and hovering any looping diagram) stops every loop. */
+html[data-motion="paused"] *,
+.motion-host:hover *,
+.motion-host:focus-within * {
+  animation-play-state: paused !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
-  .animate-marquee {
-    animation: none;
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .js .reveal {
+    opacity: 1;
+    transform: none;
   }
 }
